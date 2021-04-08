@@ -3,6 +3,8 @@ package censusanalyser;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -12,42 +14,55 @@ import java.util.Iterator;
 public class CensusAnalyser {
     public int loadIndiaCensusData(String csvFilePath) throws CensusAnalyserException {
         String extension = findExtenstionTypeOfFile(csvFilePath);
+        boolean delimeterStatus = findDelemeterOfCSVFile(csvFilePath);
+        System.out.println("Delimeter Status: "+delimeterStatus);
         int namOfEateries = 0;
         try {
-            Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
-            CsvToBeanBuilder<IndiaCensusCSV> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
-            csvToBeanBuilder.withType(IndiaCensusCSV.class);
-            csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
-            CsvToBean<IndiaCensusCSV> csvToBean = csvToBeanBuilder.build();
-            Iterator<IndiaCensusCSV> censusCSVIterator = csvToBean.iterator();;
-            while (censusCSVIterator.hasNext()) {
-                namOfEateries++;
-                IndiaCensusCSV censusData = censusCSVIterator.next();
+            if (delimeterStatus == true) {
                 if (extension.equalsIgnoreCase("csv")) {
-                    reader = Files.newBufferedReader(Paths.get(csvFilePath));
-                    CsvToBeanBuilder<IndiaCensusCSV> CsvToBeanBuilder = new CsvToBeanBuilder<>(reader);
+                    Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
+                    CsvToBeanBuilder<IndiaCensusCSV> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
                     csvToBeanBuilder.withType(IndiaCensusCSV.class);
                     csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
-                    CsvToBean<IndiaCensusCSV> CsvToBean = csvToBeanBuilder.build();
-                    //Iterator<IndiaCensusCSV> censusCSVIterator = csvToBean.iterator();
-
+                    CsvToBean<IndiaCensusCSV> csvToBean = csvToBeanBuilder.build();
+                    Iterator<IndiaCensusCSV> censusCSVIterator = csvToBean.iterator();
                     while (censusCSVIterator.hasNext()) {
                         namOfEateries++;
-                        censusData = censusCSVIterator.next();
+                        IndiaCensusCSV censusData = censusCSVIterator.next();
                     }
+                } else {
+                    throw new CensusAnalyserException("Invalid Extension type of file", CensusAnalyserException.ExceptionType.INVALID_DELIMETER);
                 }
-                else {
-                    throw new CensusAnalyserException("Invalid Extension type of file",CensusAnalyserException
-                            .ExceptionType
-                            .INVALID_FILE_EXTENSION);
-                }
-
             }
-            return namOfEateries;
-        } catch (IOException e) {
-            throw new CensusAnalyserException(e.getMessage(),
-                    CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         }
+        catch (IOException e) {
+            throw new CensusAnalyserException(e.getMessage(),
+                    CensusAnalyserException.ExceptionType.INVALID_DELIMETER);
+        }
+        return Integer.parseInt(extension);
+    }
+    public Boolean findDelemeterOfCSVFile(String filePath) {
+        String line = "";
+        String cvsSplitBy = ",";
+        boolean delimeterStatus=false;
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            while ((line = br.readLine()) != null) {
+                // use comma as separator
+                if (line.contains(",")) {
+                    cvsSplitBy = ",";
+                    delimeterStatus = true;
+                } else if (line.contains(";")) {
+                    cvsSplitBy = ";";
+                    delimeterStatus = true;
+                } else {
+                    System.out.println("Wrong separator!");
+                    delimeterStatus = false;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return delimeterStatus;
     }
     public String findExtenstionTypeOfFile(String pathValue) {
         int index = pathValue.lastIndexOf('.');
