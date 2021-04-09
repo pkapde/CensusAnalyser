@@ -3,83 +3,57 @@ package censusanalyser;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
-import java.util.List;
+import java.util.stream.StreamSupport;
 
 public class CensusAnalyser {
-    public int loadIndiaCensusData(String CsvFilePath) throws CensusAnalyserException {
-        String extension = findExtenstion(CsvFilePath);
-
-        int numberOfEnteries = 0;
-        try {
-            if (extension.equalsIgnoreCase("csv")) {
-                Reader reader = Files.newBufferedReader(Paths.get(CsvFilePath));
-                CsvToBeanBuilder<IndiaCensusCSV> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
-                csvToBeanBuilder.withType(IndiaCensusCSV.class);
-                csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
-                CsvToBean<IndiaCensusCSV> csvToBean = csvToBeanBuilder.build();
-                Iterator<IndiaCensusCSV> censusCSVIterator = csvToBean.iterator();
-
-                while (censusCSVIterator.hasNext()) {
-                    numberOfEnteries++;
-                    IndiaCensusCSV censusData = censusCSVIterator.next();
-                }
-            } else {
-                throw new CensusAnalyserException("Invalid Extension type of file", CensusAnalyserException
-                        .ExceptionType
-                        .INVALID_FILE_EXTENSION);
-            }
-            return numberOfEnteries;
+    public int loadIndiaCensusData(String csvFilePath) throws CensusAnalyserException {
+        try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
+            Iterator<IndiaCensusCSV> censusCSVIterator = this.getCSVFileIterator(reader, IndiaCensusCSV.class);
+            Iterable<IndiaCensusCSV> csvIterable = () -> censusCSVIterator;
+            int numOfEnteries = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
+            return numOfEnteries;
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
-                    CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+                    CensusAnalyserException.ExceptionType.INVALID_FILE_EXTENSION);
+        } catch (IllegalStateException e) {
+            throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
         } catch (RuntimeException e) {
-            throw new CensusAnalyserException("Invalid Header or delimeter",CensusAnalyserException
-                    .ExceptionType.INVALID_DELIMETER_OR_HEADER);
+            throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.INVALID_DELIMETER_OR_HEADER);
         }
     }
 
-    public String findExtenstion(String pathValue) {
-        int index = pathValue.lastIndexOf('.');
-        String extension = null;
-        if( index > 0) {
-            extension = pathValue.substring(index + 1);
-            System.out.println("File extension is " + extension);
-        }
-        return extension;
-    }
-
-    public int loadStateCodeData(String CsvFilePath) throws CensusAnalyserException {
-        String extension = findExtenstion(CsvFilePath);
-        int numOfEnteries = 0;
-        try {
-            if (extension.equalsIgnoreCase("csv")) {
-                Reader reader = Files.newBufferedReader(Paths.get(CsvFilePath));
-                CsvToBeanBuilder<StateCodeCSV> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
-                csvToBeanBuilder.withType(StateCodeCSV.class);
-                csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
-                CsvToBean<StateCodeCSV> csvToBean = csvToBeanBuilder.build();
-                Iterator<StateCodeCSV> stateCodeCSVIterator = csvToBean.iterator();
-                while (stateCodeCSVIterator.hasNext()) {
-                    numOfEnteries++;
-                    StateCodeCSV censusData = stateCodeCSVIterator.next();
-                }
-                System.out.println("Total Entries"+numOfEnteries);
-            } else {
-                throw new CensusAnalyserException("Invalid extension",CensusAnalyserException.ExceptionType.INVALID_FILE_EXTENSION);
-            }
+    public int loadIndianStateCode(String csvFilePath) throws CensusAnalyserException {
+        try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
+            Iterator<StateCodeCSV> censusCSVIterator = this.getCSVFileIterator(reader, StateCodeCSV.class);
+            Iterable<StateCodeCSV> csvIterable = () -> censusCSVIterator;
+            int numOfEnteries = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
+            return numOfEnteries;
         } catch (IOException e) {
-            throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
-        } catch (RuntimeException e) {
-            throw new CensusAnalyserException("Invalid Header or delimeter",CensusAnalyserException
-                    .ExceptionType.INVALID_DELIMETER_OR_HEADER);
+            throw new CensusAnalyserException(e.getMessage(),
+                    CensusAnalyserException.ExceptionType.INVALID_FILE_EXTENSION);
+        } catch (IllegalStateException e) {
+            throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
+        }catch (RuntimeException e){
+            throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.INVALID_DELIMETER_OR_HEADER);
         }
-        return numOfEnteries;
+    }
+
+
+    private <E> Iterator<E> getCSVFileIterator(Reader reader, Class csvClass) throws CensusAnalyserException {
+        try {
+            CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
+            csvToBeanBuilder.withType(csvClass);
+            csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
+            CsvToBean<E> csvToBean = csvToBeanBuilder.build();
+            return csvToBean.iterator();
+        }catch (IllegalStateException e) {
+            throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
+        }
+
     }
 }
