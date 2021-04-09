@@ -3,9 +3,6 @@ package censusanalyser;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
-import java.io.IOException;
-
 import static org.junit.Assert.assertEquals;
 
 public class CensusAnalyserTest {
@@ -84,7 +81,7 @@ public class CensusAnalyserTest {
     }
 
     @Test
-    public void givenStateCensusData_WithWrongFile_ShouldThrowException() {
+    public void givenStateCodeData_WithWrongFile_ShouldThrowException() {
         try {
             CensusAnalyser censusAnalyser = new CensusAnalyser();
             ExpectedException exceptionRule = ExpectedException.none();
@@ -96,7 +93,7 @@ public class CensusAnalyserTest {
     }
 
     @Test
-    public void givenStateCensusData_WithWrongFileType_ShouldThrowException() {
+    public void givenStateCodeData_WithWrongFileType_ShouldThrowException() {
         try {
             CensusAnalyser censusAnalyser = new CensusAnalyser();
             ExpectedException exceptionRule = ExpectedException.none();
@@ -104,6 +101,30 @@ public class CensusAnalyserTest {
             censusAnalyser.loadIndiaCensusData(WRONG_FILE_EXTENSION);
         } catch (CensusAnalyserException e) {
             Assert.assertEquals(CensusAnalyserException.ExceptionType.INVALID_FILE_EXTENSION,e.type);
+        }
+    }
+
+    @Test
+    public void givenStateCodeData_WithWrongDelimeter_ShouldThrowException() {
+        try {
+            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            ExpectedException exceptionRule = ExpectedException.none();
+            exceptionRule.expect(CensusAnalyserException.class);
+            censusAnalyser.loadIndiaCensusData(WRONG_DELIMITER_CSV_FILE_PATH);
+        } catch (CensusAnalyserException e) {
+            Assert.assertEquals(CensusAnalyserException.ExceptionType.INVALID_DELIMETER_OR_HEADER,e.type);
+        }
+    }
+
+    @Test
+    public void givenStateCodeData_WithWrongHeader_ShouldThrowException() {
+        try {
+            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            ExpectedException exceptionRule = ExpectedException.none();
+            exceptionRule.expect(CensusAnalyserException.class);
+            censusAnalyser.loadIndiaCensusData(WRONG_HEADER_CSV_FILE_PATH);
+        } catch (CensusAnalyserException e) {
+            assertEquals(CensusAnalyserException.ExceptionType.INVALID_DELIMETER_OR_HEADER, e.type);
         }
     }
 }

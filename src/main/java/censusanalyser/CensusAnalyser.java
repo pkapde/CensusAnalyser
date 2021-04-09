@@ -14,7 +14,7 @@ import java.util.List;
 
 public class CensusAnalyser {
     public int loadIndiaCensusData(String CsvFilePath) throws CensusAnalyserException {
-        String extension = findExtenstionTypeOfFile(CsvFilePath);
+        String extension = findExtenstion(CsvFilePath);
 
         int numberOfEnteries = 0;
         try {
@@ -45,7 +45,7 @@ public class CensusAnalyser {
         }
     }
 
-    public String findExtenstionTypeOfFile(String pathValue) {
+    public String findExtenstion(String pathValue) {
         int index = pathValue.lastIndexOf('.');
         String extension = null;
         if( index > 0) {
@@ -56,7 +56,7 @@ public class CensusAnalyser {
     }
 
     public int loadStateCodeData(String CsvFilePath) throws CensusAnalyserException {
-        String extension = findExtenstionTypeOfFile(CsvFilePath);
+        String extension = findExtenstion(CsvFilePath);
         int numOfEnteries = 0;
         try {
             if (extension.equalsIgnoreCase("csv")) {
