@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="CensusAnalyser:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/CensusAnalyser_jar</output-path>
+    <root id="archive" name="CensusAnalyser.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/test/resources/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="library" level="project" name="CensusAnalyser" />
+      <element id="module-output" name="CensusAnalyser.main" />
+    </root>
+  </artifact>
+</component>

@@ -3,6 +3,7 @@ package censusanalyser;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
 import static org.junit.Assert.assertEquals;
 
 public class CensusAnalyserTest {
@@ -125,6 +126,50 @@ public class CensusAnalyserTest {
             censusAnalyser.loadIndiaCensusData(WRONG_HEADER_CSV_FILE_PATH);
         } catch (CensusAnalyserException e) {
             assertEquals(CensusAnalyserException.ExceptionType.INVALID_DELIMETER_OR_HEADER, e.type);
+        }
+    }
+
+    @Test
+    public void givenIndianCensusCommonCSVFileReturnsCorrectRecords() throws CSVBuilderException {
+        try {
+            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            int numOfRecords = censusAnalyser.loadIndiaCensusAndStateCodeInCommonsCSV(INDIA_CENSUS_CSV_FILE_PATH);
+            Assert.assertEquals(29, numOfRecords);
+        } catch (CensusAnalyserException e) {
+        }
+    }
+
+    @Test
+    public void givenIndiaCensusData_WithWrongFile_ShouldThrowException_WhenCommonCSVUsed() throws CSVBuilderException {
+        try {
+            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            ExpectedException exceptionRule = ExpectedException.none();
+            exceptionRule.expect(CensusAnalyserException.class);
+            censusAnalyser.loadIndiaCensusAndStateCodeInCommonsCSV(WRONG_CSV_FILE_PATH);
+        } catch (CensusAnalyserException e) {
+            Assert.assertEquals(CensusAnalyserException.ExceptionType.INVALID_FILE_EXTENSION, e.type);
+        }
+    }
+
+    @Test
+    public void givenIndianStateCommonCSV_ShouldReturnExactCount() throws CensusAnalyserException, CSVBuilderException {
+        try {
+            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            int stateCode = censusAnalyser.loadIndiaCensusAndStateCodeInCommonsCSV(STATE_CODE_CSV_PATH);
+            Assert.assertEquals(37, stateCode);
+        } catch (CensusAnalyserException e) {
+        }
+    }
+
+    @Test
+    public void givenIndianStateCSV_WithWrongFile_ShouldThrowException_WhenCommonCSVUsed() throws CSVBuilderException {
+        try {
+            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            ExpectedException exceptionRule = ExpectedException.none();
+            exceptionRule.expect(CensusAnalyserException.class);
+            censusAnalyser.loadIndiaCensusAndStateCodeInCommonsCSV(WRONG_CSV_FILE_PATH);
+        } catch (CensusAnalyserException e) {
+            Assert.assertEquals(CensusAnalyserException.ExceptionType.INVALID_FILE_EXTENSION, e.type);
         }
     }
 }
