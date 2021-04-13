@@ -22,7 +22,7 @@ public class CensusAnalyser {
                     CensusAnalyserException.ExceptionType.INVALID_FILE_EXTENSION);
         } catch (IllegalStateException e) {
             throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | CSVBuilderException e) {
             throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.INVALID_DELIMETER_OR_HEADER);
         }
     }
@@ -37,7 +37,7 @@ public class CensusAnalyser {
                     CensusAnalyserException.ExceptionType.INVALID_FILE_EXTENSION);
         } catch (IllegalStateException e) {
             throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | CSVBuilderException e) {
             throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.INVALID_DELIMETER_OR_HEADER);
         }
     }
