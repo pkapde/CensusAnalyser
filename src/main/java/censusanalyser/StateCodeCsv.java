@@ -10,7 +10,7 @@ class StateCodeCSV {
     private String TIN;
 
     @CsvBindByName(column = "StateCode", required = true)
-    private String stateCode;
+    public String stateCode;
 
 
     @Override
