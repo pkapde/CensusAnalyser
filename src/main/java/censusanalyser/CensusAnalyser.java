@@ -76,6 +76,21 @@ public class CensusAnalyser {
         return sortedState;
     }
 
+    public String sortStateCode(){
+        Comparator<StateCodeCSV> censusComparator = Comparator.comparing(census -> census.stateCode);
+        stateCodeCSVList = this.stateCodeCSVList.stream().sorted(censusComparator).collect(Collectors.toList());
+        String sortedStateCode = new Gson().toJson(stateCodeCSVList);
+        return sortedStateCode;
+    }
+
+    public String sortByPopulation(){
+        Comparator<IndiaCensusCSV> censusComparator = Comparator.comparing(census -> census.population);
+        censusCSVList = this.censusCSVList.stream().sorted(censusComparator.reversed()).collect(Collectors.toList());
+        String sortedState = new Gson().toJson(censusCSVList);
+        return sortedState;
+    }
+
+
     /*private <E extends StateCodeCSV> void sort(List<E> censusCSVList, Comparator<E> censusComparator) {
         for (int i = 0; i < censusCSVList.size() - 1; i++) {
             for (int j = 0; j < censusCSVList.size() - 1 - i; j++) {
@@ -88,12 +103,4 @@ public class CensusAnalyser {
             }
         }
     }*/
-
-    public String sortStateCode(){
-        Comparator<StateCodeCSV> censusComparator = Comparator.comparing(census -> census.stateCode);
-        stateCodeCSVList = this.stateCodeCSVList.stream().sorted(censusComparator).collect(Collectors.toList());
-        String sortedStateCode = new Gson().toJson(stateCodeCSVList);
-        return sortedStateCode;
-    }
-
 }
