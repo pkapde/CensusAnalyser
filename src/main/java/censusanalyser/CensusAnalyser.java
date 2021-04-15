@@ -8,17 +8,17 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 
 public class CensusAnalyser {
+    HashMap<Class,List> map = new HashMap<>();
     List<IndiaCensusDAO> censusList = null;
     List<IndiaCensusDAO> stateList = null;
+    static ArrayList censusCSVList;
+    static ArrayList stateCSVList;
 
     public CensusAnalyser() {
         this.censusList = new ArrayList<IndiaCensusDAO>();
@@ -32,7 +32,9 @@ public class CensusAnalyser {
             while (csvFileIterator.hasNext()) {
                 this.censusList.add(new IndiaCensusDAO(csvFileIterator.next()));
             }
-            return censusList.size();
+            map.put(IndiaCensusCSV.class,censusList);
+            censusCSVList = new ArrayList(map.get(IndiaCensusCSV.class));
+            return map.get(IndiaCensusCSV.class).size();
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.INVALID_FILE_EXTENSION);
@@ -50,7 +52,9 @@ public class CensusAnalyser {
             while (csvFileIterator.hasNext()) {
                 this.stateList.add(new IndiaCensusDAO(csvFileIterator.next()));
             }
-            return stateList.size();
+            map.put(StateCodeCSV.class,stateList);
+            stateCSVList = new ArrayList(map.get(StateCodeCSV.class));
+            return map.get(StateCodeCSV.class).size();
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.INVALID_FILE_EXTENSION);
