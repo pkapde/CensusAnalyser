@@ -91,6 +91,15 @@ public class CensusAnalyser {
         }
     }
 
+    public String getPopulationWiseSortedUSCensusData() throws CensusAnalyserException {
+        if (map == null || map.size() == 0) {
+            throw new CensusAnalyserException("No Census Data", CensusAnalyserException.ExceptionType.NO_CENSUS_DATA);
+        }
+        Comparator<IndiaCensusDAO> censusComparator = Comparator.comparing(census -> census.population);
+        String sortedStateCensusJson = new Gson().toJson(censusList);
+        return sortedStateCensusJson;
+    }
+
     private <E> int getCount(Iterator<E> iterator) {
         Iterable<E> csvIterable = () -> iterator;
         int numOfEnteries = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
