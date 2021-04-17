@@ -15,10 +15,10 @@ import java.util.stream.StreamSupport;
 
 public class CensusAnalyser {
     HashMap<String, IndiaCensusDAO> map = new HashMap<String, IndiaCensusDAO>();
+    Map<String, IndiaCensusDAO> usStateMap = new HashMap<>();
     List<IndiaCensusDAO> censusList = null;
     List<IndiaCensusDAO> stateList = null;
-    static ArrayList censusCSVList;
-    static ArrayList stateCSVList;
+    List<IndiaCensusDAO> usList = null;
 
     public CensusAnalyser() {
         this.censusList = new ArrayList<IndiaCensusDAO>();
@@ -59,6 +59,22 @@ public class CensusAnalyser {
             throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
         } catch (RuntimeException e) {
             throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.INVALID_DELIMETER_OR_HEADER);
+        }
+    }
+
+    public int loadUSCensusData(String csvFilePath) throws CensusAnalyserException {
+        try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
+            ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
+            Iterator<USCensusCSV> csvFileIterator = csvBuilder.getCSVFileIterator(reader, USCensusCSV.class);
+            Iterable<USCensusCSV> censusCSVIterable = () -> csvFileIterator;
+            StreamSupport.stream(censusCSVIterable.spliterator(), false)
+                    .forEach(csvState -> this.map.put(csvState.state, new IndiaCensusDAO(csvState)));
+            return this.map.size();
+        } catch (IOException e) {
+            throw new CensusAnalyserException(e.getMessage(),
+                    CensusAnalyserException.ExceptionType.INVALID_FILE_EXTENSION);
+        } catch (CSVBuilderException e) {
+            throw new CensusAnalyserException(e.getMessage(), e.type.name());
         }
     }
 

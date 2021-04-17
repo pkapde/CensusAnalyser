@@ -2,6 +2,9 @@ package censusanalyser;
 
 public class CensusAnalyserException extends RuntimeException{
 
+    public CensusAnalyserException(String message, String name) {
+    }
+
     enum ExceptionType {
         UNABLE_TO_PARSE, INVALID_FILE_EXTENSION, INVALID_DELIMETER_OR_HEADER;
     }

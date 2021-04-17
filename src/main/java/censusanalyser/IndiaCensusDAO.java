@@ -9,6 +9,9 @@ public class IndiaCensusDAO {
     public  int areaInSqKm;
     public String state;
 
+    public IndiaCensusDAO(USCensusCSV csvState) {
+    }
+
     @Override
     public String toString() {
         return "IndiaCensusCSVDAO{" +
