@@ -1,9 +1,9 @@
 package censusanalyser;
 
-public class CensusAnalyserException extends Exception {
+public class CensusAnalyserException extends RuntimeException{
 
     enum ExceptionType {
-        INCORRECT_FILE,UNABLE_TO_PARSE,INVALID_FILE_EXTENSION,NO_DATA,INVALID_DELIMETER_OR_HEADER,NO_CENSUS_DATA;
+        UNABLE_TO_PARSE, INVALID_FILE_EXTENSION, INVALID_DELIMETER_OR_HEADER;
     }
 
     ExceptionType type;
