@@ -6,7 +6,7 @@ public class CensusAnalyserException extends RuntimeException{
     }
 
     enum ExceptionType {
-        UNABLE_TO_PARSE, INVALID_FILE_EXTENSION, INVALID_DELIMETER_OR_HEADER;
+        UNABLE_TO_PARSE, INVALID_FILE_EXTENSION, INVALID_DELIMETER_OR_HEADER,FILE_TYPE_OR_DELIMITER_OR_HEADER_PROBLEM;
     }
 
     ExceptionType type;

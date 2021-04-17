@@ -93,10 +93,28 @@ public class CensusAnalyser {
 
     public String getPopulationWiseSortedUSCensusData() throws CensusAnalyserException {
         if (map == null || map.size() == 0) {
-            throw new CensusAnalyserException("No Census Data", CensusAnalyserException.ExceptionType.NO_CENSUS_DATA);
+            throw new CensusAnalyserException("No Census Data", CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
         }
         Comparator<IndiaCensusDAO> censusComparator = Comparator.comparing(census -> census.population);
-        String sortedStateCensusJson = new Gson().toJson(censusList);
+        String sortedStateCensusJson = new Gson().toJson(usList);
+        return sortedStateCensusJson;
+    }
+
+    public String getDensityWiseSortedUSCensusData() throws CensusAnalyserException {
+        if (map == null || map.size() == 0) {
+            throw new CensusAnalyserException("No Census Data", CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
+        }
+        Comparator<IndiaCensusDAO> censusComparator = Comparator.comparing(census -> census.densityPerSqKm);
+        String sortedStateCensusJson = new Gson().toJson(usList);
+        return sortedStateCensusJson;
+    }
+
+    public String getAreaWiseSortedUSCensusData() throws CensusAnalyserException {
+        if (map == null || map.size() == 0) {
+            throw new CensusAnalyserException("No Census Data", CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
+        }
+        Comparator<IndiaCensusDAO> censusComparator = Comparator.comparing(census -> census.areaInSqKm);
+        String sortedStateCensusJson = new Gson().toJson(usList);
         return sortedStateCensusJson;
     }
 
