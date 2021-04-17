@@ -271,4 +271,22 @@ public class CensusAnalyserTest {
         }
     }
 
+    @Test
+    public void givenIndianAndUSData_WhenSortedByPopulation_shouldReturnSortedResult() {
+        try {
+            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            censusAnalyser.loadUSCensusData(US_CENSUS_CSV_FILE_PATH);
+            String sortedCensusData = censusAnalyser.getPopulationWiseSortedUSCensusData();
+            USCensusCSV[] uscensusCSV = new Gson().fromJson(sortedCensusData, USCensusCSV[].class);
+            Assert.assertEquals("District of Columbia", uscensusCSV[0].state);
+            censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH);
+            sortedCensusData = censusAnalyser.getDensityWiseSortedUSCensusData();
+            IndiaCensusCSV[] indiacensusCSV = new Gson().fromJson(sortedCensusData, IndiaCensusCSV[].class);
+            Assert.assertEquals("Bihar", indiacensusCSV[0].state);
+
+        } catch (CensusAnalyserException e) {
+            Assert.assertEquals(CensusAnalyserException.ExceptionType.FILE_TYPE_OR_DELIMITER_OR_HEADER_PROBLEM, e.type);
+        }
+    }
+
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="censusanalyser.CensusAnalyserTest" tests="1" skipped="0" failures="1" errors="0" timestamp="2021-04-17T22:02:57" hostname="Prashant" time="0.423">
+<testsuite name="censusanalyser.CensusAnalyserTest" tests="1" skipped="0" failures="1" errors="0" timestamp="2021-04-17T22:05:56" hostname="Prashant" time="0.438">
   <properties/>
-  <testcase name="givenUSCensusData_whenSortedByMaxInArea_shouldReturnSortedResult" classname="censusanalyser.CensusAnalyserTest" time="0.423">
+  <testcase name="givenIndianAndUSData_WhenSortedByPopulation_shouldReturnSortedResult" classname="censusanalyser.CensusAnalyserTest" time="0.438">
     <failure message="java.lang.NullPointerException" type="java.lang.NullPointerException">java.lang.NullPointerException
-	at censusanalyser.CensusAnalyserTest.givenUSCensusData_whenSortedByMaxInArea_shouldReturnSortedResult(CensusAnalyserTest.java:256)
+	at censusanalyser.CensusAnalyserTest.givenIndianAndUSData_WhenSortedByPopulation_shouldReturnSortedResult(CensusAnalyserTest.java:281)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
